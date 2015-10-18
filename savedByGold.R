@@ -1,4 +1,7 @@
-require("quantmod")
+rm(list = ls(all = TRUE))
+
+library(PerformanceAnalytics)
+library(quantmod)
 
 # retrive data of S&P 500 and Gold (Yahoo and Fred)
 getSymbols(c("^GSPC"), from="1968-01-01")
@@ -38,3 +41,12 @@ sigChanges <- subset(kala , kala$GSPC < -0.05)
 reg2 <- lm(sigChanges$GOLD ~ sigChanges$GSPC)
 plot(sigChanges$GSPC, sigChanges$GOLD)
 abline(reg2)
+
+# Annual rolling correlation between Gold and S&P 500
+gold <- spotData[,2]
+names(gold) <- 'GOLD'
+head(gold, 5)
+SP500 <- Cl(GSPC)
+colnames(SP500)[1] <- 'GSPC'
+
+chart.RollingCorrelation(gold, SP500, legend.loc="bottomleft", colorset = "blue", main = "Rolling 12-month correlation",width=254)
